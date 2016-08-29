@@ -12,23 +12,17 @@ shinyUI(fluidPage(
   # updated in the output area immediately as you type
   sidebarLayout(
     sidebarPanel(
-      textInput("caption", "Caption:", "Data Summary"),
+      selectInput("year", "Year", choice = c("2004", "2005")),
       
-      selectInput("dataset", "Choose a dataset:", 
-                  choices = c("rock", "pressure", "cars")),
+      selectInput("commodity", "Choose a commodity:", 
+                  choices = c("Wheat", "Barley")),
       
-      numericInput("obs", "Number of observations to view:", 10)
+      selectInput("month", "month of interest.  Use a number (1-12)", choices = c("1", "2"))
     ),
     
     
     # Show the caption, a summary of the dataset and an HTML 
 	 # table with the requested number of observations
-    mainPanel(
-      h3(textOutput("caption", container = span)),
-      
-      verbatimTextOutput("summary"), 
-      
-      tableOutput("view")
-    )
+	 mainPanel(plotOutput("plot"))
   )
 ))

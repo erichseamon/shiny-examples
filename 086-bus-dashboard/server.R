@@ -2,6 +2,14 @@ library(shinydashboard)
 library(leaflet)
 library(dplyr)
 library(curl) # make the jsonlite suggested dependency explicit
+library(raster)
+
+r <- raster("/agmesh-scenarios/scenario_52177/raster_commodity/2010.7.Wheat_raster.grd")
+pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), values(r),
+                    na.color = "transparent")
+
+
+
 
 # 1=South, 2=East, 3=West, 4=North
 dirColors <-c("1"="#595490", "2"="#527525", "3"="#A93F35", "4"="#BA48AA")
@@ -165,15 +173,21 @@ function(input, output, session) {
     # Four possible directions for bus routes
     dirPal <- colorFactor(dirColors, names(dirColors))
 
-    map <- leaflet(locations) %>%
-      addTiles('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png') %>%
-      addCircleMarkers(
-        ~VehicleLongitude,
-        ~VehicleLatitude,
-        color = ~dirPal(Direction),
-        opacity = 0.8,
-        radius = 8
-      )
+    map <- leaflet() %>% addTiles() %>%
+      addRasterImage(r, colors = pal, opacity = 0.9) %>%
+      addLegend(pal = pal, values = values(r),
+                title = "Surface temp")
+    
+    
+    #map <- leaflet(locations) %>%
+     # addTiles('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png') %>%
+      #addCircleMarkers(
+       # ~VehicleLongitude,
+      #  ~VehicleLatitude,
+      #  color = ~dirPal(Direction),
+       # opacity = 0.8,
+      #  radius = 8
+      #)
 
     if (as.numeric(input$routeNum) != 0) {
       route_shape <- get_route_shape(input$routeNum)

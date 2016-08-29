@@ -4,7 +4,7 @@ library(shiny)
 shinyUI(fluidPage(
   
   # Application title.
-  titlePanel("More Widgets"),
+  titlePanel("Aphid Pan Trap Exploratory Data Analysis"),
   
   # Sidebar with controls to select a dataset and specify the
   # number of observations to view. The helpText function is
@@ -16,8 +16,17 @@ shinyUI(fluidPage(
   # time-consuming.
   sidebarLayout(
     sidebarPanel(
+      
       selectInput("dataset", "Choose a dataset:", 
-                  choices = c("rock", "pressure", "cars")),
+                  choices = c("Pan Traps 2007", "Pan Traps 2008", "Pan Traps 2009", "Pan Traps 2011", "Pan Traps 2012")),
+      
+      selectInput("date", "Choose a date:", 
+                  choices = c("May 7th, 2007", "May 17, 2007")),
+      
+      selectInput(inputId = "n_breaks",
+                  label = "Approximate number of bins:",
+                  choices = c(5, 10, 20, 40)),
+      
       
       numericInput("obs", "Number of observations to view:", 10),
       
@@ -33,6 +42,15 @@ shinyUI(fluidPage(
     # function to provide an additional header above each output
     # section.
     mainPanel(
+
+      # Create a spot for the barplot
+      h4("Histogram"),
+       plotOutput("aphidPlot2"), 
+      
+      # Create a spot for the barplot
+      h4("Ripley's K function"),
+        plotOutput("aphidPlot"), 
+      
       h4("Summary"),
       verbatimTextOutput("summary"),
       

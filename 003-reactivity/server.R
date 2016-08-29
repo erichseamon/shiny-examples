@@ -1,53 +1,36 @@
 library(shiny)
 library(datasets)
+library(raster)
+library(rgdal)
+library(leaflet)
+library(maptools)
+library(png)
+library(jpeg)
+library(ncdf)   
+library(rasterVis)
+library(sp)
 
 # Define server logic required to summarize and view the selected
 # dataset
-shinyServer(function(input, output) {
 
-  # By declaring datasetInput as a reactive expression we ensure 
-  # that:
-  #
-  #  1) It is only called when the inputs it depends on changes
-  #  2) The computation and result are shared by all the callers 
-  #	  (it only executes a single time)
-  #
-  datasetInput <- reactive({
-    switch(input$dataset,
-           "rock" = rock,
-           "pressure" = pressure,
-           "cars" = cars)
-  })
+
+shinyServer(function(input, output) {
+    setwd("/nethome/erichs/counties/")
+    counties <- readShapePoly('UScounties.shp', 
+                            proj4string=CRS
+                            ("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
+    projection = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+    WA <- counties[grep("Washington", counties@data$STATE_NAME),]
   
-  # The output$caption is computed based on a reactive expression
-  # that returns input$caption. When the user changes the
-  # "caption" field:
-  #
-  #  1) This function is automatically called to recompute the 
-  #     output 
-  #  2) The new caption is pushed back to the browser for 
-  #     re-display
-  # 
-  # Note that because the data-oriented reactive expressions
-  # below don't depend on input$caption, those expressions are
-  # NOT called when input$caption changes.
-  output$caption <- renderText({
-    input$caption
+  output$plot <- renderPlot({ 
+    setwd("/reacchspace/dmine/agmesh-scenarios/scenario_52177/raster_commodity/")
+    r <- raster(paste(input$year, ".", input$month, ".", input$commodity, "_raster.grd", sep=""))  
+    
+    #r <- raster(rpre)
+    
+    rgb.palette <- colorRampPalette(c("blue", "green"))
+    levelplot(r, att='ACRES', colorkey=TRUE, col.regions=rgb.palette(120)) + layer(sp.polygons(WA))
+    #levelplot(r, att='ACRES', colorkey=TRUE, col.regions=rgb.palette(120))
   })
-  
-  # The output$summary depends on the datasetInput reactive
-  # expression, so will be re-executed whenever datasetInput is
-  # invalidated
-  # (i.e. whenever the input$dataset changes)
-  output$summary <- renderPrint({
-    dataset <- datasetInput()
-    summary(dataset)
-  })
-  
-  # The output$view depends on both the databaseInput reactive
-  # expression and input$obs, so will be re-executed whenever
-  # input$dataset or input$obs is changed. 
-  output$view <- renderTable({
-    head(datasetInput(), n = input$obs)
-  })
+
 })

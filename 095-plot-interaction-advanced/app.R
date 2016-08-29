@@ -15,6 +15,15 @@ mtc$gear <- NULL
 mtc$drat <- NULL
 mtc$carb <- NULL
 
+
+pantrap07 <- read.csv("pantrap07_refined.csv")
+pantrap08 <- read.csv("pantrap08_refined.csv")
+pantrap09 <- read.csv("pantrap09_refined.csv")
+pantrap11 <- read.csv("pantrap11_refined.csv")
+pantrap12 <- read.csv("pantrap12_refined.csv")
+
+
+
 mtc$date <- Sys.Date() + seq_len(nrow(mtc))
 mtc$datetime <- Sys.time() + 60 * seq_len(nrow(mtc))
 
@@ -62,7 +71,7 @@ shinyApp(
       column(width=3,
         div(class = "option-group",
           radioButtons("dataset", "Data set",
-            choices = c("mtcars", "diamonds", "grid"), inline = TRUE),
+            choices = c("pantrap2007", "pantrap2008", "pantrap2009", "pantrap2011", "pantrap2012"), inline = TRUE),
           radioButtons("plot_type", "Plot type",
             c("base", "ggplot2"), inline = TRUE),
 
@@ -178,7 +187,7 @@ shinyApp(
 
     # Currently selected dataset
     curdata <- reactive({
-      switch(input$dataset, mtcars = mtc, diamonds = diamonds, grid = grid)
+      switch(input$dataset, pantrap2007 = mtc, pantrap2008 = diamonds, pantrap2009 = grid)
     })
 
     # Name of the x, y, and faceting variables
@@ -186,7 +195,7 @@ shinyApp(
       if ((input$plot_type == "base"    && input$plot_scaletype   == "x_factor") ||
           (input$plot_type == "ggplot2" && input$ggplot_scaletype == "x_factor"))
       {
-        switch(input$dataset, mtcars = "cyl", diamonds = "cut", grid = "xf")
+        switch(input$dataset, pantrap2007 = "cyl", pantrap2008 = "cut", pantrap2009 = "xf")
 
       } else if ((input$plot_type == "base"    && input$plot_scaletype   == "datetime") ||
                  (input$plot_type == "ggplot2" && input$ggplot_scaletype == "datetime")) {

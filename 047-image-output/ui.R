@@ -1,12 +1,11 @@
 shinyUI(fluidPage(
-  titlePanel("Client data and query string example"),
+  titlePanel("DMINE Climate Dashboard Analytics rev.1.1"),
 
   fluidRow(
     column(4, wellPanel(
-      sliderInput("r", "Radius :", min = 0.05, max = 1,
-                  value = 0.2, step = 0.05),
-      radioButtons("picture", "Picture:",
-                  c("chainring", "face"))
+      radioButtons("picture", "Climate Impact Areas",
+                  c("Agriculture and Food Resilience", "Ecosystem Vulnerability"))
+
     )),
     column(4,
       imageOutput("image1", height = 300),

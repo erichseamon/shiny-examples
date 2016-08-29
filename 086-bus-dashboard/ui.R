@@ -1,15 +1,15 @@
 library(shinydashboard)
-library(leaflet)
+library(leaflet) 
 
 header <- dashboardHeader(
-  title = "Twin Cities Buses"
+  title = "DMINE Agricultural Crop Loss Dashboard V1.0"
 )
 
 body <- dashboardBody(
   fluidRow(
-    column(width = 9,
+    column(width = 6,
       box(width = NULL, solidHeader = TRUE,
-        leafletOutput("busmap", height = 500)
+        leafletOutput("busmap", height = 300)
       ),
       box(width = NULL,
         uiOutput("numVehiclesTable")
@@ -60,6 +60,6 @@ body <- dashboardBody(
 
 dashboardPage(
   header,
-  dashboardSidebar(disable = TRUE),
+  dashboardSidebar(disable = FALSE),
   body
 )

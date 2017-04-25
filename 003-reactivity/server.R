@@ -15,7 +15,7 @@ library(sp)
 
 
 shinyServer(function(input, output) {
-    setwd("/nethome/erichs/counties/")
+    setwd("/dmine/data/counties/")
     counties <- readShapePoly('UScounties.shp', 
                             proj4string=CRS
                             ("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
@@ -29,7 +29,7 @@ shinyServer(function(input, output) {
     #r <- raster(rpre)
     
     rgb.palette <- colorRampPalette(c("blue", "green"))
-    levelplot(r, att='ACRES', colorkey=TRUE, col.regions=rgb.palette(120)) + layer(sp.polygons(WA))
+    levelplot(r, att='LOSS', colorkey=TRUE, col.regions=rgb.palette(120)) + layer(sp.polygons(WA), data=list(WA=WA))
     #levelplot(r, att='ACRES', colorkey=TRUE, col.regions=rgb.palette(120))
   })
 
